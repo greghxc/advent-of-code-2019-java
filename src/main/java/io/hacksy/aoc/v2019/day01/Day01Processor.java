@@ -9,7 +9,7 @@ class Day01Processor {
                 .sum().intValue();
     }
 
-     int partTwo(List<Integer> integers) {
+    int partTwo(List<Integer> integers) {
         return integers
                 .map(i -> this.fuelForMassRecursive(0, i))
                 .sum().intValue();
