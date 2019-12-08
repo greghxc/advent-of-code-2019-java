@@ -16,7 +16,6 @@ public class Day08Processor {
     void partTwo(int width, int height, String input, String fileName) {
         var layers = getLayers(width, height, input);
         var gifWriter = new GifWriter(width, height, 20);
-
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 for (int k = layers.length() - 1; k >= 0; k--) {
