@@ -1,42 +1,37 @@
 package io.hacksy.aoc.v2019.day02;
 
+import io.hacksy.aoc.v2019.intcomputer.IntComputer;
 import io.vavr.collection.List;
 
 class Day02Processor {
     String partOne(String input) {
         var ints = List.of(input.split(",")).map(Integer::parseInt);
-        return Integer.toString(doCalc(ints));
+        ints = ints.update(1, 12);
+        ints = ints.update(2, 2);
+
+        var computer = new IntComputer(ints, List.empty());
+        computer.run();
+
+        return Integer.toString(computer.dumpMemory().head());
     }
 
     String partTwo(String input) {
         var products = List.range(0, 100).crossProduct();
         while (products.hasNext()) {
-            var ints = List.of(input.split(",")).map(Integer::parseInt);
             var p = products.next();
+            var ints = List.of(input.split(",")).map(Integer::parseInt);
             ints = ints.update(1, p._1());
             ints = ints.update(2, p._2());
-            if (doCalc(ints) == 19690720) {
-                return Integer.toString(100 * p._1() + p._2());
+
+            var computer = new IntComputer(ints, List.empty());
+            computer.run();
+
+            var memoryDump = computer.dumpMemory();
+
+            if (memoryDump.head() == 19690720) {
+                return Integer.toString(100 * memoryDump.get(1) + memoryDump.get(2));
             }
         }
         throw new RuntimeException("None found.");
-    }
-
-    private int doCalc(List<Integer> ints) {
-        for (int i = 0; i < ints.size(); i += 4) {
-            switch (ints.get(i)) {
-                case 1:
-                    ints = ints.update(ints.get(i + 3), ints.get(ints.get(i + 1)) + ints.get(ints.get(i + 2)));
-                    break;
-                case 2:
-                    ints = ints.update(ints.get(i + 3), ints.get(ints.get(i + 1)) * ints.get(ints.get(i + 2)));
-                    break;
-                case 99:
-                    return ints.get(0);
-                default:
-                    throw new RuntimeException("Unexpected opscode Input");
-            }
-        }
-        throw new RuntimeException("Does not terminate.");
     }
 }
