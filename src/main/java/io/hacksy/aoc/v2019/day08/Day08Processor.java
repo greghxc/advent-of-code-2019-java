@@ -36,12 +36,7 @@ public class Day08Processor {
     }
 
     private Map<String, List<String>> charCountMap(String string) {
-        var charList = new ArrayList<String>();
-        for (Character c : string.toCharArray()) {
-            charList.add(String.valueOf(c));
-        }
-        var list = List.ofAll(charList);
-
+        var list = List.ofAll(string.toCharArray()).map(String::valueOf);
         return list.groupBy(c -> c);
     }
 }
