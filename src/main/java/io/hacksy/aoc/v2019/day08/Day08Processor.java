@@ -4,7 +4,7 @@ import io.hacksy.aoc.util.GifWriter;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 
-import java.util.ArrayList;
+import static io.vavr.API.*;
 
 public class Day08Processor {
     int partOne(int width, int height, String input) {
@@ -16,15 +16,19 @@ public class Day08Processor {
     void partTwo(int width, int height, String input, String fileName) {
         var layers = getLayers(width, height, input);
         var gifWriter = new GifWriter(width, height, 20);
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                for (int k = layers.length() - 1; k >= 0; k--) {
-                    var pixel = layers.get(k).charAt(i * width + j);
-                    if (pixel == '0') { gifWriter.addPixel(j, i, false); }
-                    if (pixel == '1') { gifWriter.addPixel(j, i, true); }
-                }
-            }
-        }
+
+        List.range(0, height).forEach(i ->
+                List.range(0, width).forEach(j ->
+                        List.range(0, layers.length()).reverse().forEach(k ->
+                                Match(layers.get(k).charAt(i * width + j)).of(
+                                    Case($('0'), () -> gifWriter.addPixel(j, i, false)),
+                                    Case($('1'), () -> gifWriter.addPixel(j, i, true)),
+                                    Case($(), () -> gifWriter)
+                                )
+                        )
+                )
+        );
+
         gifWriter.write(fileName);
     }
 
