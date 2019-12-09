@@ -5,21 +5,21 @@ import io.vavr.collection.List;
 
 class Day02Processor {
     String partOne(String input) {
-        var ints = List.of(input.split(",")).map(Integer::parseInt);
-        ints = ints.update(1, 12);
-        ints = ints.update(2, 2);
+        var ints = List.of(input.split(",")).map(Long::parseLong);
+        ints = ints.update(1, 12L);
+        ints = ints.update(2, 2L);
 
         var computer = new IntComputer(ints, List.empty());
         computer.run();
 
-        return Integer.toString(computer.dumpMemory().head());
+        return Long.toString(computer.dumpMemory().head());
     }
 
     String partTwo(String input) {
-        var products = List.range(0, 100).crossProduct();
+        var products = List.range(0L, 100L).crossProduct();
         while (products.hasNext()) {
             var p = products.next();
-            var ints = List.of(input.split(",")).map(Integer::parseInt);
+            var ints = List.of(input.split(",")).map(Long::parseLong);
             ints = ints.update(1, p._1());
             ints = ints.update(2, p._2());
 
@@ -29,7 +29,7 @@ class Day02Processor {
             var memoryDump = computer.dumpMemory();
 
             if (memoryDump.head() == 19690720) {
-                return Integer.toString(100 * memoryDump.get(1) + memoryDump.get(2));
+                return Long.toString(100 * memoryDump.get(1) + memoryDump.get(2));
             }
         }
         throw new RuntimeException("None found.");

@@ -15,21 +15,26 @@ public class Day08Processor {
 
     void partTwo(int width, int height, String input, String fileName) {
         var layers = getLayers(width, height, input);
-        var gifWriter = new GifWriter(width, height, 20);
+        var products = List.range(0, layers.length())
+                .reverse()
+                .crossProduct(List.range(0, height)
+                        .crossProduct(List.range(0, width))
+                );
 
-        List.range(0, height).forEach(i ->
-                List.range(0, width).forEach(j ->
-                        List.range(0, layers.length()).reverse().forEach(k ->
-                                Match(layers.get(k).charAt(i * width + j)).of(
-                                    Case($('0'), () -> gifWriter.addPixel(j, i, false)),
-                                    Case($('1'), () -> gifWriter.addPixel(j, i, true)),
-                                    Case($(), () -> gifWriter)
-                                )
-                        )
-                )
-        );
+        products.foldLeft(
+                new GifWriter(width, height, 10),
+                (gWriter, tuples) -> {
+                    var y = tuples._2()._1();
+                    var x = tuples._2()._2();
+                    var layer = tuples._1();
 
-        gifWriter.write(fileName);
+                    return Match(layers.get(layer).charAt(y * width + x)).of(
+                            Case($('0'), () -> gWriter.modifyPixel(x, y, false)),
+                            Case($('1'), () -> gWriter.modifyPixel(x, y, true)),
+                            Case($(), () -> gWriter)
+                    );
+                }
+        ).write(fileName);
     }
 
     List<String> getLayers(int width, int height, String input) {

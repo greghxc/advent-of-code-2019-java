@@ -15,9 +15,9 @@ public class GifWriter {
         bufferedImage.createGraphics();
     }
 
-    public GifWriter addPixel(int x, int y, boolean pixel) {
+    public GifWriter modifyPixel(int x, int y, boolean on) {
         var graphics = bufferedImage.getGraphics();
-        if (pixel) {
+        if (on) {
             graphics.fillRect(x * multiplier, y * multiplier, multiplier, multiplier);
         } else {
             graphics.clearRect(x * multiplier, y * multiplier, multiplier, multiplier);
